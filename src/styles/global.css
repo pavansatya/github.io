@@ -155,3 +155,45 @@
   .text-balance { text-wrap: balance; }
   .above { position: relative; z-index: 1; }
 }
+
+/* ------------------------------------------------------------------
+   Print — the résumé page is the reason this exists.
+   The screen theme is dark; printing it would waste a cartridge and
+   read badly, so printing switches to black on white.
+   ------------------------------------------------------------------ */
+@media print {
+  html { color-scheme: light; }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body::before { display: none !important; }
+
+  header, footer, nav { display: none !important; }
+
+  main { padding: 0 !important; }
+
+  /* flatten panels and borders for paper */
+  [class*="bg-panel"],
+  [class*="bg-canvas"],
+  .panel {
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+  [class*="border-line"] { border-color: #d4d4d4 !important; }
+
+  /* force every token colour to print legibly */
+  [class*="text-fg"],
+  [class*="text-accent"],
+  h1, h2, h3, h4, p, li, dt, dd, span, div, a {
+    color: #000 !important;
+  }
+
+  a { text-decoration: none !important; }
+
+  /* keep a role and its bullets together */
+  section, article > section > div > div { break-inside: avoid; }
+
+  .shell { max-width: none !important; padding: 0 !important; }
+}
