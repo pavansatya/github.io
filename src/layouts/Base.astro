@@ -36,6 +36,7 @@ const person = {
   url: site.url,
   image: new URL('/pavan.jpg', site.url).href,
   email: `mailto:${site.email}`,
+  telephone: site.phone,
   address: { '@type': 'PostalAddress', addressLocality: 'Los Angeles', addressRegion: 'CA', addressCountry: 'US' },
   sameAs: [site.links.linkedin, site.links.github],
   worksFor: { '@type': 'Organization', name: roles[0].org },

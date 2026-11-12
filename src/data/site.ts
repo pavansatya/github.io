@@ -14,6 +14,8 @@ export const site = {
   discipline: 'Cloud & data platform engineer',
   location: 'Los Angeles, CA',
   email: 'krishvenigalla06@gmail.com',
+  phone: '+1 267-734-7347',
+  phoneHref: 'tel:+12677347347',
 
   headline: 'I build the data platforms health systems run on.',
 
@@ -34,6 +36,8 @@ export const site = {
     github: 'https://github.com/pavansatya',
     linkedin: 'https://www.linkedin.com/in/pavan-venigalla',
     resumePdf: '/resume.pdf',
+    /** Filename a visitor gets when they save the PDF. */
+    resumeFilename: 'Pavan_Venigalla_Data_Analytics_Engineer.pdf',
     paper: 'https://www.neuroquantology.com/media/article_pdfs/264-271.pdf',
   },
 

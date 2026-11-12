@@ -11,6 +11,7 @@ const formEnabled = formKey.length > 0;
 
 const channels = [
   { label: 'Email', value: site.email, href: `mailto:${site.email}`, copy: site.email },
+  { label: 'Phone', value: site.phone, href: site.phoneHref, copy: site.phone },
   { label: 'LinkedIn', value: 'in/pavan-venigalla', href: site.links.linkedin, copy: null },
   { label: 'GitHub', value: 'pavansatya', href: site.links.github, copy: null },
   {
@@ -42,7 +43,7 @@ const channels = [
               <div class="flex items-center gap-2">
                 <a
                   href={c.href}
-                  target={c.href.startsWith('mailto') ? undefined : '_blank'}
+                  target={/^(mailto|tel):/.test(c.href) ? undefined : '_blank'}
                   rel="noopener"
                   class="group flex flex-1 items-center justify-between gap-4 rounded-lg border border-line bg-panel px-5 py-4 transition-colors hover:border-accent/50"
                 >
@@ -56,7 +57,7 @@ const channels = [
                     type="button"
                     data-copy={c.copy}
                     class="shrink-0 rounded-lg border border-line bg-panel px-3 py-4 font-mono text-[11px] text-fg-faint transition-colors hover:border-accent hover:text-accent"
-                    aria-label="Copy email address"
+                    aria-label={`Copy ${c.label.toLowerCase()}`}
                   >
                     copy
                   </button>
