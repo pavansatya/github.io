@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site, education } from '../data/site';
+import { roles } from '../data/roles';
+import { skillGroups } from '../data/skills';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Set true on the home page so the title is not doubled up. */
+  isHome?: boolean;
+  /** Emit the Person JSON-LD block (home page only). */
+  structuredData?: boolean;
+}
+
+const {
+  title,
+  description = site.seo.description,
+  isHome = false,
+  structuredData = false,
+} = Astro.props;
+
+const pageTitle = isHome || !title ? site.seo.title : `${title} — ${site.shortName}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL(site.seo.ogImage, site.url).href;
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  alternateName: site.shortName,
+  jobTitle: site.role,
+  description: site.seo.description,
+  url: site.url,
+  image: new URL('/pavan.jpg', site.url).href,
+  email: `mailto:${site.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Los Angeles', addressRegion: 'CA', addressCountry: 'US' },
+  sameAs: [site.links.linkedin, site.links.github],
+  worksFor: { '@type': 'Organization', name: roles[0].org },
+  alumniOf: education.map((e) => ({ '@type': 'EducationalOrganization', name: e.org })),
+  knowsAbout: skillGroups.flatMap((g) => g.items).slice(0, 30),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#07090d" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.shortName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
+  </head>
+
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-canvas"
+      >Skip to content</a
+    >
+    <Nav />
+    <main id="main" class="above">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
