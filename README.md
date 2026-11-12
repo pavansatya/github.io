@@ -93,6 +93,13 @@ Vercel auto-detects Astro and needs no configuration beyond:
 
 `package.json` pins `engines.node >= 22.23.4` so Vercel selects a compatible runtime.
 
+`vercel.json` declares the framework and build command in the repo rather than
+relying on dashboard settings, and sets caching: everything under `/_astro` is
+content-hashed by the build, so those files are served `immutable` with a
+one-year max-age, while HTML stays revalidated. Note that Vercel validates
+`vercel.json` strictly and rejects any key outside its schema — including
+comment fields.
+
 ## Regenerating the social card
 
 `public/og.png` is generated, not hand-drawn:

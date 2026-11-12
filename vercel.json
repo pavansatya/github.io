@@ -6,7 +6,6 @@
   "installCommand": "npm install",
   "headers": [
     {
-      "comment": "Build assets carry a content hash in their filename, so they can be cached forever.",
       "source": "/_astro/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
