@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import PipelineExplorer from '../../components/react/PipelineExplorer.tsx';
+import { projects } from '../../data/projects';
+import { stages, crossCutting } from '../../data/pipeline';
+
+export function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project: p, next } = Astro.props;
+---
+
+<Base title={p.title} description={p.summary}>
+  <article class="shell pt-12 pb-10 sm:pt-16">
+    <a href="/work" class="link-underline font-mono text-xs text-fg-faint hover:text-accent">
+      ← all work
+    </a>
+
+    <div class="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-faint">
+      <span class="text-accent">{p.num}</span>
+      <span>·</span><span>{p.org}</span>
+      <span>·</span><span>{p.period}</span>
+    </div>
+
+    <h1 class="mt-4 max-w-[22ch] text-4xl leading-[1.05] text-fg sm:text-5xl">{p.title}</h1>
+    <p class="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-dim">{p.summary}</p>
+
+    <div class="mt-12 grid gap-12 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
+      <div class="min-w-0">
+        <h2 class="mb-4 text-xl text-fg">The problem</h2>
+        <p class="mb-12 max-w-[68ch] leading-relaxed text-fg-dim">{p.problem}</p>
+
+        <h2 class="mb-4 text-xl text-fg">What I built</h2>
+        <div class="mb-12 flex max-w-[68ch] flex-col gap-4">
+          {p.approach.map((para) => <p class="leading-relaxed text-fg-dim">{para}</p>)}
+        </div>
+
+        {
+          p.hasPipeline && (
+            <section class="mb-12">
+              <div class="label mb-3">Explore the architecture</div>
+              <PipelineExplorer stages={stages} crossCutting={crossCutting} client:visible />
+            </section>
+          )
+        }
+
+        {
+          p.hasPlayground && (
+            <a
+              href="/sql"
+              class="mb-12 flex items-center justify-between gap-4 rounded-xl border border-line bg-panel p-6 transition-colors hover:border-accent/50"
+            >
+              <span>
+                <span class="mb-1.5 block text-base text-fg">Query the validation data yourself</span>
+                <span class="block text-sm text-fg-dim">
+                  A synthetic version of this run-and-check telemetry, in a real database in your browser.
+                </span>
+              </span>
+              <span class="shrink-0 font-mono text-sm text-accent">→</span>
+            </a>
+          )
+        }
+
+        <h2 class="mb-5 text-xl text-fg">What changed</h2>
+        <ul class="flex max-w-[68ch] flex-col gap-3.5">
+          {
+            p.outcomes.map((o) => (
+              <li class="flex gap-3.5">
+                <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                <span class="leading-relaxed text-fg-dim">{o}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <aside class="lg:sticky lg:top-24 lg:self-start">
+        <div class="rounded-xl border border-line bg-panel p-6">
+          <div class="label mb-3">Stack</div>
+          <div class="mb-7 flex flex-wrap gap-2">
+            {
+              p.stack.map((s) => (
+                <span class="rounded border border-line bg-canvas px-2 py-1 font-mono text-[11px] text-fg-dim">
+                  {s}
+                </span>
+              ))
+            }
+          </div>
+
+          <div class="label mb-2.5">Role</div>
+          <p class="mb-7 text-sm leading-relaxed text-fg-dim">{p.role}</p>
+
+          <a
+            href={`/work/${next.slug}`}
+            class="flex items-center justify-between gap-3 rounded-md border border-line-bright px-4 py-3 font-mono text-xs text-fg transition-colors hover:border-accent hover:text-accent"
+          >
+            <span class="truncate">Next: {next.title}</span>
+            <span>→</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+  </article>
+</Base>

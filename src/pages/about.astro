@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site, education, certifications, publication } from '../data/site';
+import { roles } from '../data/roles';
+
+const statusLabel: Record<string, { text: string; cls: string }> = {
+  active: { text: 'Active', cls: 'text-pass border-pass/30 bg-pass/10' },
+  'in-progress': { text: 'In progress', cls: 'text-warn border-warn/30 bg-warn/10' },
+  lapsed: { text: 'Lapsed', cls: 'text-fg-faint border-line bg-canvas' },
+};
+---
+
+<Base
+  title="About"
+  description="Pavan Venigalla — cloud and data platform engineer in Los Angeles. From instrumentation engineering to Azure lakehouses."
+>
+  <section class="shell pt-14 pb-10 sm:pt-20">
+    <div class="grid gap-12 lg:grid-cols-[1.5fr_0.8fr] lg:gap-16">
+      <div>
+        <div class="label mb-3">About</div>
+        <h1 class="max-w-[18ch] text-4xl leading-[1.05] text-fg sm:text-5xl">
+          I like the parts of this job that are quiet and structural.
+        </h1>
+
+        <div class="mt-8 flex max-w-[62ch] flex-col gap-5 leading-relaxed text-fg-dim">
+          <p>
+            I started out in instrumentation and control engineering at NIT Trichy, which is the
+            discipline of measuring physical things accurately and then trusting the measurement
+            enough to act on it. Somewhere in there I realised the measurement I actually cared
+            about was the data itself — how it is collected, where it quietly goes wrong, and what
+            it takes to trust a number enough to make a decision on it.
+          </p>
+          <p>
+            That question has taken me through healthcare and finance analytics at Piramal, a
+            research lab at Rutgers, consulting work in Texas, and now public health in Los Angeles.
+            The domains change and the work rhymes: somebody needs an answer, the data is spread
+            across several systems in three different shapes, and someone has to build the road
+            between them — then keep that road from washing out.
+          </p>
+          <p>
+            These days most of my work is platform engineering rather than analysis. Deployment
+            pipelines, workspace and access configuration, Delta tuning, catalog governance, and the
+            logging and validation frameworks that make a failure legible. It is less glamorous than
+            a dashboard and it is the part that decides whether the dashboard can be believed.
+          </p>
+          <p>
+            I care about naming things well, making a pipeline fail loudly instead of silently, and
+            writing the validation nobody asked for. If you want to talk about Delta Lake,
+            dimensional modelling, or how to get a data platform to deploy like software, I am easy
+            to reach.
+          </p>
+        </div>
+      </div>
+
+      <div class="lg:pt-14">
+        <div class="overflow-hidden rounded-xl border border-line bg-panel">
+          <img
+            src="/pavan.jpg"
+            alt={site.name}
+            width="640"
+            height="800"
+            loading="eager"
+            class="w-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="shell pt-16">
+    <SectionHeading label="Experience" title="Where I've worked" aside={`${roles.length} roles`} />
+    <div class="flex flex-col">
+      {
+        roles.map((r) => (
+          <div class="grid gap-3 border-t border-line py-7 lg:grid-cols-[11rem_1fr] lg:gap-10">
+            <div class="font-mono text-xs text-fg-faint">{r.period}</div>
+            <div>
+              <div class="text-lg text-fg">{r.title}</div>
+              <div class="mt-1 font-mono text-xs text-accent">
+                {r.org} — {r.place}
+              </div>
+              <p class="mt-3 max-w-[70ch] leading-relaxed text-fg-dim">{r.note}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Education + certs -->
+  <section class="shell pt-16">
+    <div class="grid gap-5 lg:grid-cols-2">
+      <div class="rounded-xl border border-line bg-panel p-7">
+        <div class="label mb-5">Education</div>
+        <div class="flex flex-col gap-6">
+          {
+            education.map((e) => (
+              <div>
+                <div class="text-base text-fg">{e.degree}</div>
+                <div class="mt-1 text-sm text-fg-dim">{e.org}</div>
+                <div class="mt-1.5 font-mono text-[11px] text-fg-faint">
+                  {e.place} · {e.period}
+                  {e.note && <span class="text-accent"> · {e.note}</span>}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-line bg-panel p-7">
+        <div class="label mb-5">Certifications</div>
+        <div class="flex flex-col gap-3">
+          {
+            certifications.map((c) => (
+              <div class="flex items-center justify-between gap-4 border-b border-line pb-3 last:border-0 last:pb-0">
+                <div>
+                  <div class="text-sm text-fg">{c.name}</div>
+                  <div class="mt-0.5 font-mono text-[11px] text-fg-faint">{c.issuer}</div>
+                </div>
+                <span
+                  class:list={[
+                    'shrink-0 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider',
+                    statusLabel[c.status].cls,
+                  ]}
+                >
+                  {statusLabel[c.status].text}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="mt-7 border-t border-line pt-5">
+          <div class="label mb-2">{publication.title}</div>
+          <a
+            href={publication.url}
+            target="_blank"
+            rel="noopener"
+            class="link-underline text-sm text-fg-dim hover:text-accent"
+          >
+            {publication.venue}, {publication.year} →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,8 +1,186 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { site } from '../data/site';
+import { projects } from '../data/projects';
+import { headlineSkills } from '../data/skills';
+import { roles } from '../data/roles';
+
+const featured = projects.slice(0, 4);
+const current = roles[0];
 ---
-<!doctype html>
-<html lang="en">
-  <head><meta charset="utf-8" /><title>smoke test</title></head>
-  <body><h1 class="text-accent font-mono">build ok</h1></body>
-</html>
+
+<Base isHome structuredData>
+  <!-- Hero -->
+  <section class="shell pt-16 pb-20 sm:pt-24">
+    <div
+      class="mb-8 inline-flex items-center gap-2.5 rounded-full border border-line bg-panel px-3.5 py-1.5 font-mono text-[11px] text-fg-dim"
+    >
+      <span class="relative flex h-2 w-2">
+        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60"></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-accent"></span>
+      </span>
+      {site.location} — open to platform &amp; data engineering work
+    </div>
+
+    <h1
+      class="max-w-[18ch] text-[2.5rem] leading-[1.05] tracking-tight text-fg sm:text-6xl lg:text-7xl"
+    >
+      {site.headline}
+    </h1>
+
+    <p class="mt-7 max-w-[62ch] text-base leading-relaxed text-fg-dim sm:text-lg">
+      {site.intro}
+    </p>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a
+        href="/work"
+        class="rounded-md bg-accent px-5 py-3 font-mono text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+        >See the work</a
+      >
+      <a
+        href="/sql"
+        class="rounded-md border border-line-bright px-5 py-3 font-mono text-sm text-fg transition-colors hover:border-accent hover:text-accent"
+        >Run SQL in your browser →</a
+      >
+    </div>
+  </section>
+
+  <!-- Facts -->
+  <section class="shell">
+    <dl class="grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+      {
+        site.facts.map((f) => (
+          <div class="bg-panel p-5">
+            <dt class="label mb-2">{f.k}</dt>
+            <dd class="font-mono text-[13px] leading-relaxed text-fg">{f.v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Skills -->
+  <section class="shell pt-20">
+    <div class="label mb-5">Working with</div>
+    <div class="flex flex-wrap gap-2">
+      {
+        headlineSkills.map((s) => (
+          <span class="rounded-md border border-line bg-panel px-3 py-1.5 font-mono text-xs text-fg-dim">
+            {s}
+          </span>
+        ))
+      }
+      <a
+        href="/resume#skills"
+        class="rounded-md border border-dashed border-line-bright px-3 py-1.5 font-mono text-xs text-fg-faint transition-colors hover:border-accent hover:text-accent"
+        >all skills →</a
+      >
+    </div>
+  </section>
+
+  <!-- Try it -->
+  <section class="shell pt-20">
+    <SectionHeading
+      label="Two things you can actually try"
+      title="Not screenshots — they run"
+      aside="in your browser"
+    />
+    <div class="grid gap-5 md:grid-cols-2">
+      <a
+        href="/pipeline"
+        class="group rounded-xl border border-line bg-panel p-7 transition-all hover:-translate-y-0.5 hover:border-bronze/50"
+      >
+        <div class="mb-5 flex gap-1.5">
+          <span class="h-1.5 w-10 rounded-full bg-bronze"></span>
+          <span class="h-1.5 w-10 rounded-full bg-silver"></span>
+          <span class="h-1.5 w-10 rounded-full bg-gold"></span>
+        </div>
+        <h3 class="mb-3 text-lg text-fg transition-colors group-hover:text-accent">
+          Pipeline explorer
+        </h3>
+        <p class="text-sm leading-relaxed text-fg-dim">
+          Walk a medallion lakehouse stage by stage — what each layer is responsible for, the
+          transformation that moves data through it, and the checks that gate it.
+        </p>
+      </a>
+
+      <a
+        href="/sql"
+        class="group rounded-xl border border-line bg-panel p-7 transition-all hover:-translate-y-0.5 hover:border-accent/50"
+      >
+        <div class="mb-5 font-mono text-xs text-accent">
+          <span class="text-fg-faint">duckdb&gt;</span> SELECT * FROM fact_pipeline_run
+        </div>
+        <h3 class="mb-3 text-lg text-fg transition-colors group-hover:text-accent">
+          SQL playground
+        </h3>
+        <p class="text-sm leading-relaxed text-fg-dim">
+          A real analytical database running in your browser, over a synthetic star schema of
+          pipeline runs and validation results. Write your own queries against it.
+        </p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section class="shell pt-20">
+    <SectionHeading
+      label="Selected work"
+      title="Case studies"
+      aside={`${projects.length} projects`}
+    />
+    <div class="grid gap-5 sm:grid-cols-2">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+    <div class="mt-8">
+      <a href="/work" class="link-underline font-mono text-sm text-accent">All {projects.length} projects →</a>
+    </div>
+  </section>
+
+  <!-- Now -->
+  <section class="shell pt-20">
+    <div class="grid gap-8 rounded-xl border border-line bg-panel p-7 lg:grid-cols-[1.4fr_1fr] lg:p-10">
+      <div>
+        <div class="label mb-3">Now</div>
+        <h2 class="mb-4 text-xl text-fg sm:text-2xl">{current.title} at {current.org}</h2>
+        <p class="text-sm leading-relaxed text-fg-dim sm:text-base">{current.note}</p>
+      </div>
+      <div class="flex flex-col justify-center gap-3 font-mono text-xs">
+        {
+          [
+            ['Since', 'Nov 2025'],
+            ['Platform', 'Azure Synapse + Delta Lake'],
+            ['Shipping', 'YAML pipelines, dev → staging → prod'],
+            ['Studying', 'AZ-400'],
+          ].map(([k, v]) => (
+            <div class="flex justify-between gap-5 border-b border-line pb-2.5">
+              <span class="text-fg-faint">{k}</span>
+              <span class="text-right text-fg-dim">{v}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="shell pt-20">
+    <div class="rounded-xl border border-line bg-panel p-8 text-center sm:p-12">
+      <h2 class="mx-auto mb-4 max-w-[22ch] text-2xl text-fg sm:text-3xl">
+        Got a pipeline that keeps breaking?
+      </h2>
+      <p class="mx-auto mb-8 max-w-[52ch] text-sm leading-relaxed text-fg-dim sm:text-base">
+        Hiring, a data platform problem you are stuck on, or comparing notes on Delta tuning — all
+        welcome. I reply to everything.
+      </p>
+      <a
+        href="/contact"
+        class="inline-block rounded-md bg-accent px-6 py-3 font-mono text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+        >Get in touch</a
+      >
+    </div>
+  </section>
+</Base>
