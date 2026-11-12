@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found" description="That page does not exist.">
+  <section class="shell flex min-h-[55vh] flex-col justify-center py-20">
+    <div class="label mb-3">404</div>
+    <h1 class="max-w-[18ch] text-3xl leading-tight text-fg sm:text-4xl">
+      No rows returned.
+    </h1>
+    <p class="mt-5 max-w-[48ch] leading-relaxed text-fg-dim">
+      That page does not exist — the query was valid, the result set was empty.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a
+        href="/"
+        class="rounded-md bg-accent px-5 py-2.5 font-mono text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+        >Home</a
+      >
+      <a
+        href="/work"
+        class="rounded-md border border-line-bright px-5 py-2.5 font-mono text-sm text-fg transition-colors hover:border-accent hover:text-accent"
+        >See the work</a
+      >
+    </div>
+  </section>
+</Base>

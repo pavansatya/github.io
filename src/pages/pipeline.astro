@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import PipelineExplorer from '../components/react/PipelineExplorer.tsx';
+import { stages, crossCutting } from '../data/pipeline';
+---
+
+<Base
+  title="Pipeline explorer"
+  description="Walk a medallion lakehouse stage by stage — Bronze, Silver, Gold — with the transformation, the engineering decisions and the validation gates at each layer."
+>
+  <section class="shell pt-14 pb-10 sm:pt-20">
+    <div class="label mb-3">Interactive</div>
+    <h1 class="max-w-[20ch] text-4xl leading-[1.05] text-fg sm:text-5xl">
+      A medallion lakehouse, stage by stage.
+    </h1>
+    <p class="mt-6 max-w-[62ch] text-base leading-relaxed text-fg-dim">
+      Most architecture diagrams are boxes and arrows that tell you nothing about why the boxes are
+      there. This one is clickable: each stage shows what it is responsible for, the decisions that
+      actually matter at that layer, the transformation that moves data through it, and the checks
+      that have to pass before anything continues downstream.
+    </p>
+    <p class="mt-4 font-mono text-xs text-fg-faint">
+      Use ← → to move between stages.
+    </p>
+  </section>
+
+  <section class="shell pb-8">
+    <PipelineExplorer stages={stages} crossCutting={crossCutting} client:load />
+  </section>
+
+  <section class="shell">
+    <a
+      href="/work/azure-clinical-platform"
+      class="flex items-center justify-between gap-4 rounded-xl border border-line bg-panel p-6 transition-colors hover:border-accent/50"
+    >
+      <span>
+        <span class="mb-1.5 block text-base text-fg">See this pattern in production</span>
+        <span class="block text-sm text-fg-dim">
+          The case study behind it — migrating a county health system off Oracle.
+        </span>
+      </span>
+      <span class="shrink-0 font-mono text-sm text-accent">→</span>
+    </a>
+  </section>
+</Base>

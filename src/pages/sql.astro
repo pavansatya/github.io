@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import SqlPlayground from '../components/react/SqlPlayground.tsx';
+---
+
+<Base
+  title="SQL playground"
+  description="A real DuckDB database running in your browser, over a synthetic star schema of data pipeline runs and validation results. Write your own SQL against it."
+>
+  <section class="shell pt-14 pb-8 sm:pt-20">
+    <div class="label mb-3">Playground</div>
+    <h1 class="max-w-[20ch] text-4xl leading-[1.05] text-fg sm:text-5xl">
+      Query a warehouse I designed.
+    </h1>
+    <p class="mt-6 max-w-[64ch] text-base leading-relaxed text-fg-dim">
+      Reading that someone understands dimensional modelling is weaker than querying a model they
+      built. This is a star schema of the telemetry a data platform produces about itself — pipeline
+      runs and the validation checks applied to them — in a real analytical database running
+      entirely in this tab.
+    </p>
+    <p class="mt-4 max-w-[64ch] text-sm leading-relaxed text-fg-faint">
+      There is an incident hiding in the data: one pipeline reported success while quietly dropping
+      about 40% of its rows. The second starter query finds it.
+    </p>
+  </section>
+
+  <section class="shell pb-10">
+    <SqlPlayground client:visible />
+  </section>
+</Base>

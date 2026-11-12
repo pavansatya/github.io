@@ -1,0 +1,32 @@
+---
+import type { Project } from '../data/projects';
+interface Props { project: Project }
+const { project: p } = Astro.props;
+---
+
+<a
+  href={`/work/${p.slug}`}
+  class="group relative flex flex-col rounded-xl border border-line bg-panel p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-line-bright hover:bg-panel-2"
+>
+  <div class="mb-4 flex items-center gap-3 font-mono text-[11px]">
+    <span class="text-accent">{p.num}</span>
+    <span class="h-px flex-1 bg-line"></span>
+    <span class="text-fg-faint">{p.org}</span>
+  </div>
+
+  <h3 class="mb-3 text-lg leading-snug text-fg transition-colors group-hover:text-accent">
+    {p.title}
+  </h3>
+
+  <p class="mb-6 text-sm leading-relaxed text-fg-dim">{p.summary}</p>
+
+  <div class="mt-auto flex flex-wrap gap-2">
+    {
+      p.tags.map((t) => (
+        <span class="rounded border border-line bg-canvas px-2 py-1 font-mono text-[11px] text-fg-faint">
+          {t}
+        </span>
+      ))
+    }
+  </div>
+</a>

@@ -1,0 +1,199 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens — "data terminal"
+   Dark-first. Medallion colours (bronze/silver/gold) are reserved for
+   data visualisation so they always mean a lakehouse layer, never decor.
+   ------------------------------------------------------------------ */
+@theme {
+  /* surfaces */
+  --color-canvas: #07090d;
+  --color-panel: #0e1218;
+  --color-panel-2: #141922;
+  --color-line: #1f2733;
+  --color-line-bright: #2e3847;
+
+  /* foreground — all AA or better on --color-canvas */
+  --color-fg: #e9edf3;
+  --color-fg-dim: #9aa5b5;
+  --color-fg-faint: #7b8694;
+
+  /* brand accent */
+  --color-accent: #2de2c5;
+  --color-accent-deep: #0b3c38;
+  --color-accent-glow: #2de2c533;
+
+  /* medallion / lakehouse layers */
+  --color-bronze: #d98e4a;
+  --color-silver: #bcc5d2;
+  --color-gold: #f2c14e;
+
+  /* status */
+  --color-pass: #4ade80;
+  --color-warn: #f6a53d;
+  --color-fail: #ff6b6b;
+
+  /* type */
+  --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* faint engineering grid, fixed so it reads as a backdrop not a texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(to right, #ffffff07 1px, transparent 1px),
+      linear-gradient(to bottom, #ffffff07 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  a { color: inherit; text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-canvas);
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-canvas); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-bright);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-fg-faint); }
+}
+
+/* ------------------------------------------------------------------
+   Reusable primitives
+   ------------------------------------------------------------------ */
+@layer components {
+  /* small uppercase monospace label — the workhorse of this design */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-fg-faint);
+  }
+
+  .panel {
+    background-color: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) { .shell { padding-inline: 2.5rem; } }
+
+  /* animated accent underline for nav + inline links */
+  .link-underline {
+    background-image: linear-gradient(var(--color-accent), var(--color-accent));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.25s ease;
+  }
+  .link-underline:hover { background-size: 100% 1px; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .above { position: relative; z-index: 1; }
+}
+
+/* ------------------------------------------------------------------
+   Print — the résumé page is the reason this exists.
+   The screen theme is dark; printing it would waste a cartridge and
+   read badly, so printing switches to black on white.
+   ------------------------------------------------------------------ */
+@media print {
+  html { color-scheme: light; }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body::before { display: none !important; }
+
+  header, footer, nav { display: none !important; }
+
+  main { padding: 0 !important; }
+
+  /* flatten panels and borders for paper */
+  [class*="bg-panel"],
+  [class*="bg-canvas"],
+  .panel {
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+  [class*="border-line"] { border-color: #d4d4d4 !important; }
+
+  /* force every token colour to print legibly */
+  [class*="text-fg"],
+  [class*="text-accent"],
+  h1, h2, h3, h4, p, li, dt, dd, span, div, a {
+    color: #000 !important;
+  }
+
+  a { text-decoration: none !important; }
+
+  /* keep a role and its bullets together */
+  section, article > section > div > div { break-inside: avoid; }
+
+  .shell { max-width: none !important; padding: 0 !important; }
+}
