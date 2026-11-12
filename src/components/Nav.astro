@@ -14,12 +14,17 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
 <header class="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
   <nav class="shell flex h-16 items-center justify-between gap-4" aria-label="Primary">
-    <a href="/" class="group flex items-center gap-2.5 font-mono text-sm" aria-label="{site.shortName} — home">
+    <a href="/" class="group flex items-center gap-2.5 font-mono text-sm">
       <span
+        aria-hidden="true"
         class="grid h-8 w-8 place-items-center rounded-md border border-line-bright bg-panel text-[11px] font-semibold tracking-tight text-accent transition-colors group-hover:border-accent"
         >{site.initials}</span
       >
-      <span class="hidden font-semibold tracking-tight text-fg sm:inline">{site.shortName}</span>
+      <!-- Kept in the accessibility tree at every width so the link's
+           accessible name always matches its visible text. -->
+      <span class="sr-only font-semibold tracking-tight text-fg sm:not-sr-only sm:inline"
+        >{site.shortName}</span
+      >
     </a>
 
     <!-- desktop -->
